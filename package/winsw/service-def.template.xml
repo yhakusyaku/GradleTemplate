@@ -1,0 +1,14 @@
+<!--
+    Winsw configuration. See:
+    - https://github.com/kohsuke/winsw#environment-variable-expansion-in-configuration-file
+-->
+<service>
+    <id>@projectName@</id>
+    <name>@projectName@ Service</name>
+    <description>@projectDescription@</description>
+    <env name="APP_HOME" value="%BASE%\..\libs\"/>
+    <executable>java</executable>
+    <arguments>@serverArgs@</arguments>
+    <priority>normal</priority>
+    <logmode>rotate</logmode>
+</service>

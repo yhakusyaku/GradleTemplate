@@ -1,0 +1,36 @@
+configurations {
+    fetch
+}
+
+dependencies {
+    fetch("com.sun.winsw:winsw:1.16:bin@exe")
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task copyWindowsService(type: Copy , dependsOn: build) {
+    def svcName = project.name
+    copy {
+        from configurations.fetch
+        include '*.exe'
+        into "$buildDir/winsw"
+        rename { svcName + '.exe' }
+    }
+    copy {
+        from 'package/winsw/'
+        include 'service-def.template.xml'
+        into "$buildDir/winsw"
+        rename { svcName + '.xml' }
+        filter(ReplaceTokens, tokens: [
+            projectName: project.name,
+            projectDescription: project.description,
+            serverArgs: "-jar %APP_HOME%" + jar.archiveName
+        ])
+    }
+    copy {
+        from 'package/winsw/'
+        include 'service-runtime.xml'
+        into "$buildDir/winsw"
+        rename { svcName + '.exe.config' }
+    }
+}
